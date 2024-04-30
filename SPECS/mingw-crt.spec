@@ -8,8 +8,8 @@
 %global bootstrap 0
 
 Name:           mingw-crt
-Version:        11.0.0
-Release:        1%{?dist}
+Version:        11.0.1
+Release:        3%{?dist}
 Summary:        MinGW Windows cross-compiler runtime
 
 License:        LicenseRef-Fedora-Public-Domain AND ZPL-2.1
@@ -140,6 +140,18 @@ rm -rf %{buildroot}%{ucrt64_includedir}/*.c
 
 
 %changelog
+* Thu Jan 25 2024 Fedora Release Engineering <releng@fedoraproject.org>
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
+
+* Sun Jan 21 2024 Fedora Release Engineering <releng@fedoraproject.org>
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
+
+* Thu Aug 17 2023 Sandro Mani <manisandro@gmail.com> - 11.0.1-1
+- Update to 11.0.1
+
+* Thu Jul 20 2023 Fedora Release Engineering <releng@fedoraproject.org>
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
+
 * Sun Apr 30 2023 Sandro Mani <manisandro@gmail.com> - 11.0.0-1
 - Update to 11.0.0
 
