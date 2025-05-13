@@ -8,8 +8,8 @@
 %global bootstrap 0
 
 Name:           mingw-crt
-Version:        11.0.1
-Release:        3%{?dist}
+Version:        12.0.0
+Release:        4%{?dist}
 Summary:        MinGW Windows cross-compiler runtime
 
 License:        LicenseRef-Fedora-Public-Domain AND ZPL-2.1
@@ -38,8 +38,9 @@ Source2:       standard-dlls-mingw64
 # (rpm -ql ucrt64-crt | grep '\.a$' | while read f ; do x86_64-w64-mingw32ucrt-dlltool -I $f 2>/dev/null ; done) | sort | uniq | tr A-Z a-z > standard-dlls-ucrt64
 Source3:       standard-dlls-ucrt64
 
-# Fix build failure with gcc11
-Patch0:         mingw-crt_gcc11.patch
+# Patch has been proposed upstream:
+# https://sourceforge.net/p/mingw-w64/mailman/message/58799229/
+Patch0001:      0001-crt-Add-bcryptprimitives.def.patch
 
 BuildArch:      noarch
 
@@ -107,8 +108,9 @@ pushd mingw-w64-crt
     # Filter out -fstack-protector and -lssp from LDFLAGS as libssp is not yet potentially built with the bootstrap gcc
     MINGW32_LDFLAGS="`echo %{mingw32_ldflags} | sed 's|-fstack-protector||' | sed 's|-lssp||'`"
     MINGW64_LDFLAGS="`echo %{mingw64_ldflags} | sed 's|-fstack-protector||' | sed 's|-lssp||'`"
-    MINGW64_CONFIGURE_ARGS="--disable-lib32"
     UCRT64_LDFLAGS="`echo %{ucrt64_ldflags} | sed 's|-fstack-protector||' | sed 's|-lssp||'`"
+    MINGW32_CONFIGURE_ARGS="--with-default-msvcrt=msvcrt"
+    MINGW64_CONFIGURE_ARGS="--disable-lib32 --with-default-msvcrt=msvcrt"
     UCRT64_CONFIGURE_ARGS="--disable-lib32 --with-default-msvcrt=ucrt"
     %mingw_configure
     %mingw_make_build
@@ -140,6 +142,19 @@ rm -rf %{buildroot}%{ucrt64_includedir}/*.c
 
 
 %changelog
+* Tue Sep 24 2024 Sandro Mani <manisandro@gmail.com> - 12.0.0-4
+- Pass --with-default-msvcrt=msvcrt when building mingw32/64 crt
+
+* Thu Jul 25 2024 Marc-André Lureau <marcandre.lureau@redhat.com> - 12.0.0-3
+- Add libbcryptprimitives.dll
+  Related: https://bugzilla.redhat.com/show_bug.cgi?id=2299374
+
+* Thu Jul 18 2024 Fedora Release Engineering <releng@fedoraproject.org> - 12.0.0.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
+
+* Tue Jul 16 2024 Sandro Mani <manisandro@gmail.com> - 12.0.0-1
+- Update to 12.0.0
+
 * Thu Jan 25 2024 Fedora Release Engineering <releng@fedoraproject.org>
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
 
